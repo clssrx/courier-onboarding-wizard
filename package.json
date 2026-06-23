@@ -1,0 +1,16 @@
+{
+	"private": true,
+	"workspaces": [
+		"client"
+	],
+	"scripts": {
+		"dev:api": "node mock-api/server.mjs",
+		"dev:client": "npm --workspace client run dev",
+		"dev": "concurrently -n api,client \"npm run dev:api\" \"npm run dev:client\"",
+		"build": "npm --workspace client run build",
+		"test": "npm --workspace client run test:run"
+	},
+	"devDependencies": {
+		"concurrently": "^9.0.0"
+	}
+}
