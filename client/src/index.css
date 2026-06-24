@@ -19,7 +19,8 @@ body {
 	margin: 0;
 	min-width: 320px;
 	min-height: 100vh;
-	background: #f7f7f8;
+	background:
+		radial-gradient(circle at top left, #fff4e8 0, transparent 28rem), #f7f7f8;
 	color: #1f2933;
 }
 
@@ -40,5 +41,116 @@ select {
 }
 
 h1 {
+	margin: 0 0 1.5rem;
+	font-size: clamp(2rem, 8vw, 3.25rem);
+	line-height: 1;
+	letter-spacing: -0.05em;
 	color: #1f2933;
+}
+
+h2 {
+	margin: 0 0 1.25rem;
+	font-size: 1.5rem;
+}
+
+section {
+	padding: 1.25rem;
+	border: 1px solid #e2e4e8;
+	border-radius: 1.25rem;
+	background: white;
+	box-shadow: 0 1.5rem 3rem rgb(31 41 51 / 0.08);
+}
+
+section > div {
+	margin-block-end: 1rem;
+}
+
+label {
+	display: block;
+	margin-block-end: 0.4rem;
+	font-weight: 650;
+}
+
+input,
+select {
+	width: 100%;
+	min-height: 2.75rem;
+	padding: 0.65rem 0.75rem;
+	border: 1px solid #c9cdd3;
+	border-radius: 0.75rem;
+	background: white;
+	color: #1f2933;
+}
+
+input:focus,
+select:focus,
+button:focus-visible {
+	outline: 3px solid #ffb000;
+	outline-offset: 2px;
+}
+
+button {
+	min-height: 2.75rem;
+	padding: 0.65rem 1rem;
+	border: 0;
+	border-radius: 999px;
+	background: #ff8000;
+	color: #1f2933;
+	font-weight: 750;
+	cursor: pointer;
+}
+
+button:hover {
+	background: #ff9f2f;
+}
+
+button + button {
+	margin-inline-start: 0.75rem;
+}
+
+button:first-child:not(:only-child) {
+	background: #edf0f3;
+}
+
+button:first-child:not(:only-child):hover {
+	background: #dde2e7;
+}
+
+p {
+	line-height: 1.5;
+}
+
+.button-row {
+	display: flex;
+	gap: 0.75rem;
+	flex-wrap: wrap;
+	margin-block-start: 1.5rem;
+}
+
+.button-row button + button {
+	margin-inline-start: 0;
+}
+
+@media (max-width: 40rem) {
+	.app {
+		padding: 1rem;
+	}
+
+	section {
+		padding: 1rem;
+		border-radius: 1rem;
+	}
+
+	button {
+		width: 100%;
+	}
+
+	button + button {
+		margin-inline-start: 0;
+		margin-block-start: 0.75rem;
+	}
+
+	.button-row {
+		display: block;
+	}
 }

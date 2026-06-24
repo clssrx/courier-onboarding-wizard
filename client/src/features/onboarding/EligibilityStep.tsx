@@ -53,7 +53,7 @@ export function EligibilityStep({
 				</select>
 			</div>
 
-			<div>
+			<div className='button-row'>
 				<button type='button' onClick={onBack}>
 					Back
 				</button>

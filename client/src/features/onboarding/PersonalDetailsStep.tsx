@@ -57,9 +57,11 @@ export function PersonalDetailsStep({
 				/>
 			</div>
 
-			<button type='button' onClick={onNext}>
-				Continue
-			</button>
+			<div className='button-row'>
+				<button type='button' onClick={onNext}>
+					Continue
+				</button>
+			</div>
 		</section>
 	);
 }
