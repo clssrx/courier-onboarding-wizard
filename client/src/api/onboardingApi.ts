@@ -4,6 +4,7 @@ import type {
 	OnboardingConfig,
 	SavedApplication,
 	SubmitPayload,
+	SubmitSuccessResponse,
 } from '../features/onboarding/types';
 
 const API_BASE_URL = 'http://localhost:4000';
@@ -13,7 +14,6 @@ async function fetchJson<TResponse>(
 	options?: RequestInit,
 ): Promise<TResponse> {
 	const response = await fetch(`${API_BASE_URL}${path}`, options);
-
 	const data = await response.json();
 
 	if (!response.ok) {
@@ -36,16 +36,16 @@ export function getSavedApplication(
 	applicationId: string,
 ): Promise<SavedApplication> {
 	return fetchJson<SavedApplication>(
-		`/onboarding/application/${encodeURIComponent(applicationId)}`,
+		`/onboarding/applications/${encodeURIComponent(applicationId)}`,
 	);
 }
 
 export function submitApplication(
 	applicationId: string,
 	payload: SubmitPayload,
-): Promise<void> {
-	return fetchJson<void>(
-		`/onboarding/application/${encodeURIComponent(applicationId)}/submit`,
+): Promise<SubmitSuccessResponse> {
+	return fetchJson<SubmitSuccessResponse>(
+		`/onboarding/applications/${encodeURIComponent(applicationId)}/submit`,
 		{
 			method: 'POST',
 			headers: {

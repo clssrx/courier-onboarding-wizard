@@ -3,6 +3,7 @@ import type { FieldErrors, OnboardingConfig, WizardStep } from './types';
 import { DocumentsStep } from './DocumentsStep';
 import { EligibilityStep } from './EligibilityStep';
 import { PersonalDetailsStep } from './PersonalDetailsStep';
+import { SuccessStep } from './SuccessStep';
 import { initialWizardState, wizardReducer } from './wizardReducer';
 import {
 	hasValidationErrors,
@@ -10,15 +11,33 @@ import {
 	validateEligibility,
 	validatePersonalDetails,
 } from './validation';
+import { submitApplication } from '../../api/onboardingApi';
+import { buildSubmitPayload } from './submitPayload';
+import {
+	getApiErrorMessage,
+	getStepForFirstFieldError,
+	hasApiFieldErrors,
+	isApiError,
+	mapApiFieldErrorsToFieldErrors,
+} from './apiErrors';
 
 type OnboardingWizardProps = {
 	config: OnboardingConfig;
 };
 
+const APPLICATION_ID = 'new-application';
+
 export function OnboardingWizard({ config }: OnboardingWizardProps) {
 	const [state, dispatch] = useReducer(wizardReducer, initialWizardState);
 
-	const { currentStep, formData, errors } = state;
+	const {
+		currentStep,
+		formData,
+		errors,
+		submitStatus,
+		submitError,
+		submittedApplicationId,
+	} = state;
 
 	function goToStepAfterValidation(
 		errorsForStep: FieldErrors,
@@ -54,7 +73,7 @@ export function OnboardingWizard({ config }: OnboardingWizardProps) {
 		}
 	}
 
-	function handleSubmit() {
+	async function handleSubmit() {
 		const documentErrors = validateDocuments(
 			formData.documents,
 			config,
@@ -67,22 +86,63 @@ export function OnboardingWizard({ config }: OnboardingWizardProps) {
 		}
 
 		dispatch({ type: 'CLEAR_ERRORS' });
+		dispatch({ type: 'SUBMIT_STARTED' });
 
-		// Submit API call to be added
+		try {
+			const response = await submitApplication(
+				APPLICATION_ID,
+				buildSubmitPayload(formData, config),
+			);
+
+			dispatch({
+				type: 'SUBMIT_SUCCEEDED',
+				applicationId: response.applicationId,
+			});
+		} catch (error) {
+			if (
+				isApiError(error) &&
+				(error.status === 422 || error.status === 409) &&
+				hasApiFieldErrors(error.data)
+			) {
+				const fieldErrors = mapApiFieldErrorsToFieldErrors(error.data);
+
+				dispatch({ type: 'SET_ERRORS', errors: fieldErrors });
+				dispatch({
+					type: 'GO_TO_STEP',
+					step: getStepForFirstFieldError(fieldErrors),
+				});
+				return;
+			}
+
+			if (isApiError(error)) {
+				dispatch({
+					type: 'SUBMIT_FAILED',
+					message: getApiErrorMessage(error),
+				});
+				return;
+			}
+
+			dispatch({
+				type: 'SUBMIT_FAILED',
+				message: 'Something went wrong. Please try again.',
+			});
+		}
 	}
 
 	return (
 		<div>
 			{/* Wizard step indicator -> to become a progress bar later */}
-			<p>
-				Step{' '}
-				{currentStep === 'personal'
-					? '1'
-					: currentStep === 'eligibility'
-						? '2'
-						: '3'}{' '}
-				of 3
-			</p>
+			{currentStep !== 'success' && (
+				<p>
+					Step{' '}
+					{currentStep === 'personal'
+						? '1'
+						: currentStep === 'eligibility'
+							? '2'
+							: '3'}{' '}
+					of 3
+				</p>
+			)}
 
 			{currentStep === 'personal' && (
 				<PersonalDetailsStep
@@ -114,6 +174,8 @@ export function OnboardingWizard({ config }: OnboardingWizardProps) {
 					vehicleType={formData.eligibility.vehicleType}
 					documents={formData.documents}
 					errors={errors}
+					submitError={submitError}
+					isSubmitting={submitStatus === 'submitting'}
 					onDocumentChange={(documentType, value) =>
 						dispatch({
 							type: 'UPDATE_DOCUMENT_NUMBER',
@@ -124,6 +186,10 @@ export function OnboardingWizard({ config }: OnboardingWizardProps) {
 					onBack={() => dispatch({ type: 'GO_TO_STEP', step: 'eligibility' })}
 					onSubmit={handleSubmit}
 				/>
+			)}
+
+			{currentStep === 'success' && (
+				<SuccessStep applicationId={submittedApplicationId} />
 			)}
 		</div>
 	);

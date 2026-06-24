@@ -11,16 +11,19 @@ type DocumentsStepProps = {
 	vehicleType: string;
 	documents: DocumentFormFields;
 	errors: FieldErrors;
+	submitError: string | null;
+	isSubmitting: boolean;
 	onDocumentChange: (documentType: string, value: string) => void;
 	onBack: () => void;
 	onSubmit: () => void;
 };
-
 export function DocumentsStep({
 	config,
 	vehicleType,
 	documents,
 	errors,
+	submitError,
+	isSubmitting,
 	onDocumentChange,
 	onBack,
 	onSubmit,
@@ -67,12 +70,18 @@ export function DocumentsStep({
 				</div>
 			)}
 
+			{submitError && (
+				<p className='form-error' role='alert'>
+					{submitError}
+				</p>
+			)}
+
 			<div className='button-row'>
-				<button type='button' onClick={onBack}>
+				<button type='button' onClick={onBack} disabled={isSubmitting}>
 					Back
 				</button>
-				<button type='button' onClick={onSubmit}>
-					Submit application
+				<button type='button' onClick={onSubmit} disabled={isSubmitting}>
+					{isSubmitting ? 'Submitting…' : 'Submit application'}
 				</button>
 			</div>
 		</section>

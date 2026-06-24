@@ -80,3 +80,5 @@ export type WizardFormData = {
 };
 
 export type FieldErrors = Record<string, string>;
+
+export type SubmitStatus = 'idle' | 'submitting' | 'success';

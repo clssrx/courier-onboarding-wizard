@@ -3,6 +3,7 @@ import type {
 	FieldErrors,
 	PersonalDetails,
 	Eligibility,
+	SubmitStatus,
 	WizardFormData,
 	WizardStep,
 } from './types';
@@ -11,6 +12,9 @@ export type WizardState = {
 	currentStep: WizardStep;
 	formData: WizardFormData;
 	errors: FieldErrors;
+	submitStatus: SubmitStatus;
+	submitError: string | null;
+	submittedApplicationId: string | null;
 };
 
 export type WizardAction =
@@ -39,6 +43,17 @@ export type WizardAction =
 	  }
 	| {
 			type: 'CLEAR_ERRORS';
+	  }
+	| {
+			type: 'SUBMIT_STARTED';
+	  }
+	| {
+			type: 'SUBMIT_SUCCEEDED';
+			applicationId: string;
+	  }
+	| {
+			type: 'SUBMIT_FAILED';
+			message: string;
 	  };
 
 export const initialWizardState: WizardState = {
@@ -57,6 +72,9 @@ export const initialWizardState: WizardState = {
 		documents: {},
 	},
 	errors: {},
+	submitStatus: 'idle',
+	submitError: null,
+	submittedApplicationId: null,
 };
 
 function removeError(errors: FieldErrors, field: string): FieldErrors {
@@ -81,6 +99,7 @@ export function wizardReducer(
 					},
 				},
 				errors: removeError(state.errors, `personal.${action.field}`),
+				submitError: null,
 			};
 
 		case 'UPDATE_ELIGIBILITY_FIELD':
@@ -94,6 +113,7 @@ export function wizardReducer(
 					},
 				},
 				errors: removeError(state.errors, `eligibility.${action.field}`),
+				submitError: null,
 			};
 
 		case 'UPDATE_DOCUMENT_NUMBER':
@@ -112,6 +132,7 @@ export function wizardReducer(
 					state.errors,
 					`documents.${action.documentType}.number`,
 				),
+				submitError: null,
 			};
 
 		case 'GO_TO_STEP':
@@ -120,10 +141,35 @@ export function wizardReducer(
 				currentStep: action.step,
 			};
 
+		case 'SUBMIT_STARTED':
+			return {
+				...state,
+				submitStatus: 'submitting',
+				submitError: null,
+			};
+
+		case 'SUBMIT_SUCCEEDED':
+			return {
+				...state,
+				currentStep: 'success',
+				submitStatus: 'success',
+				submitError: null,
+				submittedApplicationId: action.applicationId,
+			};
+
+		case 'SUBMIT_FAILED':
+			return {
+				...state,
+				submitStatus: 'idle',
+				submitError: action.message,
+			};
+
 		case 'SET_ERRORS':
 			return {
 				...state,
 				errors: action.errors,
+				submitStatus: 'idle',
+				submitError: null,
 			};
 
 		case 'CLEAR_ERRORS':
