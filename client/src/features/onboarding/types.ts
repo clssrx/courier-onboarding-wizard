@@ -68,3 +68,15 @@ export type ApiError = {
 	status: number;
 	data: ApiErrorResponse;
 };
+
+export type WizardStep = 'personal' | 'eligibility' | 'documents' | 'success';
+
+export type DocumentFormFields = Record<string, { number: string }>;
+
+export type WizardFormData = {
+	personal: PersonalDetails;
+	eligibility: Eligibility;
+	documents: DocumentFormFields;
+};
+
+export type FieldErrors = Record<string, string>;
