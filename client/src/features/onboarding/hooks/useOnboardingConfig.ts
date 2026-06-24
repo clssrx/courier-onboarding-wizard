@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { getOnboardingConfig } from '../../api/onboardingApi';
-import type { OnboardingConfig } from './types';
+import { getOnboardingConfig } from '../../../api/onboardingApi';
+import type { OnboardingConfig } from '../types';
 
 type ConfigState =
 	| { status: 'loading'; config: null; error: null }

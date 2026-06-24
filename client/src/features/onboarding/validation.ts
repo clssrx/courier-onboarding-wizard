@@ -8,7 +8,7 @@ import type {
 import {
 	getRequiredDocumentTypes,
 	getSelectedVehicle,
-} from './documentRequirements';
+} from './config/documentRequirements';
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 

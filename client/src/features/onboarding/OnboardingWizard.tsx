@@ -1,25 +1,16 @@
 import { useReducer } from 'react';
 import type { FieldErrors, OnboardingConfig, WizardStep } from './types';
-import { DocumentsStep } from './DocumentsStep';
-import { EligibilityStep } from './EligibilityStep';
-import { PersonalDetailsStep } from './PersonalDetailsStep';
-import { SuccessStep } from './SuccessStep';
-import { initialWizardState, wizardReducer } from './wizardReducer';
+import { DocumentsStep } from './components/DocumentsStep';
+import { EligibilityStep } from './components/EligibilityStep';
+import { PersonalDetailsStep } from './components/PersonalDetailsStep';
+import { SuccessStep } from './components/SuccessStep';
+import { initialWizardState, wizardReducer } from './state/wizardReducer';
 import {
 	hasValidationErrors,
-	validateDocuments,
 	validateEligibility,
 	validatePersonalDetails,
 } from './validation';
-import { submitApplication } from '../../api/onboardingApi';
-import { buildSubmitPayload } from './submitPayload';
-import {
-	getApiErrorMessage,
-	getStepForFirstFieldError,
-	hasApiFieldErrors,
-	isApiError,
-	mapApiFieldErrorsToFieldErrors,
-} from './apiErrors';
+import { submitApplicationFlow } from './submission/submitApplicationFlow';
 
 type OnboardingWizardProps = {
 	config: OnboardingConfig;
@@ -74,59 +65,12 @@ export function OnboardingWizard({ config }: OnboardingWizardProps) {
 	}
 
 	async function handleSubmit() {
-		const documentErrors = validateDocuments(
-			formData.documents,
+		await submitApplicationFlow({
+			applicationId: APPLICATION_ID,
+			formData,
 			config,
-			formData.eligibility.vehicleType,
-		);
-
-		if (hasValidationErrors(documentErrors)) {
-			dispatch({ type: 'SET_ERRORS', errors: documentErrors });
-			return;
-		}
-
-		dispatch({ type: 'CLEAR_ERRORS' });
-		dispatch({ type: 'SUBMIT_STARTED' });
-
-		try {
-			const response = await submitApplication(
-				APPLICATION_ID,
-				buildSubmitPayload(formData, config),
-			);
-
-			dispatch({
-				type: 'SUBMIT_SUCCEEDED',
-				applicationId: response.applicationId,
-			});
-		} catch (error) {
-			if (
-				isApiError(error) &&
-				(error.status === 422 || error.status === 409) &&
-				hasApiFieldErrors(error.data)
-			) {
-				const fieldErrors = mapApiFieldErrorsToFieldErrors(error.data);
-
-				dispatch({ type: 'SET_ERRORS', errors: fieldErrors });
-				dispatch({
-					type: 'GO_TO_STEP',
-					step: getStepForFirstFieldError(fieldErrors),
-				});
-				return;
-			}
-
-			if (isApiError(error)) {
-				dispatch({
-					type: 'SUBMIT_FAILED',
-					message: getApiErrorMessage(error),
-				});
-				return;
-			}
-
-			dispatch({
-				type: 'SUBMIT_FAILED',
-				message: 'Something went wrong. Please try again.',
-			});
-		}
+			dispatch,
+		});
 	}
 
 	return (

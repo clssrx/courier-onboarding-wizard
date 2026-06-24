@@ -1,10 +1,10 @@
-import { getRequiredDocumentTypes } from './documentRequirements';
+import { getRequiredDocumentTypes } from '../config/documentRequirements';
 import type {
 	DocumentFormFields,
 	FieldErrors,
 	OnboardingConfig,
-} from './types';
-import { getDocumentNumber } from './wizardReducer';
+} from '../types';
+import { getDocumentNumber } from '../state/wizardReducer';
 
 type DocumentsStepProps = {
 	config: OnboardingConfig;

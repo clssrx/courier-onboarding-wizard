@@ -1,4 +1,4 @@
-import type { FieldErrors, PersonalDetails } from './types';
+import type { FieldErrors, PersonalDetails } from '../types';
 
 type PersonalDetailsStepProps = {
 	values: PersonalDetails;

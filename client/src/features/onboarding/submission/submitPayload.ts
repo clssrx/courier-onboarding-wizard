@@ -1,5 +1,5 @@
-import type { OnboardingConfig, SubmitPayload, WizardFormData } from './types';
-import { getRequiredDocumentTypes } from './documentRequirements';
+import type { OnboardingConfig, SubmitPayload, WizardFormData } from '../types';
+import { getRequiredDocumentTypes } from '../config/documentRequirements';
 
 export function buildSubmitPayload(
 	formData: WizardFormData,

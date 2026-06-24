@@ -4,7 +4,7 @@ import type {
 	ApiMessageErrorResponse,
 	FieldErrors,
 	WizardStep,
-} from './types';
+} from '../types';
 
 export function isApiError(error: unknown): error is ApiError {
 	return (

@@ -1,5 +1,5 @@
 import { OnboardingWizard } from './features/onboarding/OnboardingWizard';
-import { useOnboardingConfig } from './features/onboarding/useOnboardingConfig';
+import { useOnboardingConfig } from './features/onboarding/hooks/useOnboardingConfig';
 
 function App() {
 	const { status, config, error } = useOnboardingConfig();

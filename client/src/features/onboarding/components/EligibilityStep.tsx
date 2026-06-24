@@ -1,4 +1,4 @@
-import type { Eligibility, FieldErrors, OnboardingConfig } from './types';
+import type { Eligibility, FieldErrors, OnboardingConfig } from '../types';
 
 type EligibilityStepProps = {
 	config: OnboardingConfig;

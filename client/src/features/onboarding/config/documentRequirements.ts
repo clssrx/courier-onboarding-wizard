@@ -1,4 +1,4 @@
-import type { OnboardingConfig, VehicleType } from './types';
+import type { OnboardingConfig, VehicleType } from '../types';
 
 export function getSelectedVehicle(
 	config: OnboardingConfig,

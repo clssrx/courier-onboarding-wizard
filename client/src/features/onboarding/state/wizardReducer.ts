@@ -6,7 +6,7 @@ import type {
 	SubmitStatus,
 	WizardFormData,
 	WizardStep,
-} from './types';
+} from '../types';
 
 export type WizardState = {
 	currentStep: WizardStep;
