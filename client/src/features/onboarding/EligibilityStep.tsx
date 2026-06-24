@@ -1,8 +1,9 @@
-import type { Eligibility, OnboardingConfig } from './types';
+import type { Eligibility, FieldErrors, OnboardingConfig } from './types';
 
 type EligibilityStepProps = {
 	config: OnboardingConfig;
 	values: Eligibility;
+	errors: FieldErrors;
 	onChange: (field: keyof Eligibility, value: string) => void;
 	onBack: () => void;
 	onNext: () => void;
@@ -11,6 +12,7 @@ type EligibilityStepProps = {
 export function EligibilityStep({
 	config,
 	values,
+	errors,
 	onChange,
 	onBack,
 	onNext,
@@ -25,6 +27,10 @@ export function EligibilityStep({
 					id='city'
 					name='city'
 					value={values.city}
+					aria-invalid={Boolean(errors['eligibility.city'])}
+					aria-describedby={
+						errors['eligibility.city'] ? 'city-error' : undefined
+					}
 					onChange={(event) => onChange('city', event.target.value)}
 				>
 					<option value=''>Select a city</option>
@@ -34,6 +40,11 @@ export function EligibilityStep({
 						</option>
 					))}
 				</select>
+				{errors['eligibility.city'] && (
+					<p id='city-error' className='field-error'>
+						{errors['eligibility.city']}
+					</p>
+				)}
 			</div>
 
 			<div>
@@ -42,6 +53,10 @@ export function EligibilityStep({
 					id='vehicleType'
 					name='vehicleType'
 					value={values.vehicleType}
+					aria-invalid={Boolean(errors['eligibility.vehicleType'])}
+					aria-describedby={
+						errors['eligibility.vehicleType'] ? 'vehicleType-error' : undefined
+					}
 					onChange={(event) => onChange('vehicleType', event.target.value)}
 				>
 					<option value=''>Select a vehicle</option>
@@ -51,6 +66,11 @@ export function EligibilityStep({
 						</option>
 					))}
 				</select>
+				{errors['eligibility.vehicleType'] && (
+					<p id='vehicleType-error' className='field-error'>
+						{errors['eligibility.vehicleType']}
+					</p>
+				)}
 			</div>
 
 			<div className='button-row'>

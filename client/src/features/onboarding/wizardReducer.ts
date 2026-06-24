@@ -59,6 +59,12 @@ export const initialWizardState: WizardState = {
 	errors: {},
 };
 
+function removeError(errors: FieldErrors, field: string): FieldErrors {
+	const nextErrors = { ...errors };
+	delete nextErrors[field];
+	return nextErrors;
+}
+
 export function wizardReducer(
 	state: WizardState,
 	action: WizardAction,
@@ -74,6 +80,7 @@ export function wizardReducer(
 						[action.field]: action.value,
 					},
 				},
+				errors: removeError(state.errors, `personal.${action.field}`),
 			};
 
 		case 'UPDATE_ELIGIBILITY_FIELD':
@@ -86,6 +93,7 @@ export function wizardReducer(
 						[action.field]: action.value,
 					},
 				},
+				errors: removeError(state.errors, `eligibility.${action.field}`),
 			};
 
 		case 'UPDATE_DOCUMENT_NUMBER':
@@ -100,6 +108,10 @@ export function wizardReducer(
 						},
 					},
 				},
+				errors: removeError(
+					state.errors,
+					`documents.${action.documentType}.number`,
+				),
 			};
 
 		case 'GO_TO_STEP':
