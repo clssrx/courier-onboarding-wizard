@@ -1,5 +1,6 @@
 import type { FieldErrors, PersonalDetails } from '../types';
 import type { Ref } from 'react';
+import { WizardStepLayout } from './WizardStepLayout';
 
 type PersonalDetailsStepProps = {
 	headingRef?: Ref<HTMLHeadingElement>;
@@ -17,11 +18,12 @@ export function PersonalDetailsStep({
 	onNext,
 }: PersonalDetailsStepProps) {
 	return (
-		<section aria-labelledby='personal-details-title'>
-			<h2 id='personal-details-title' ref={headingRef} className='step-title'>
-				Personal details
-			</h2>
-
+		<WizardStepLayout
+			title='Personal details'
+			titleId='personal-details-title'
+			stepNumber={1}
+			headingRef={headingRef}
+		>
 			<div>
 				<label htmlFor='firstName'>First name</label>
 				<input
@@ -108,6 +110,6 @@ export function PersonalDetailsStep({
 					Continue
 				</button>
 			</div>
-		</section>
+		</WizardStepLayout>
 	);
 }

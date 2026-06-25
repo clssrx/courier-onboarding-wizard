@@ -6,6 +6,7 @@ import type {
 } from '../types';
 import { getDocumentNumber } from '../state/wizardReducer';
 import type { Ref } from 'react';
+import { WizardStepLayout } from './WizardStepLayout';
 
 type DocumentsStepProps = {
 	headingRef?: Ref<HTMLHeadingElement>;
@@ -34,15 +35,16 @@ export function DocumentsStep({
 	const requiredDocumentTypes = getRequiredDocumentTypes(config, vehicleType);
 
 	return (
-		<section aria-labelledby='documents-title'>
-			<h2 id='documents-title' ref={headingRef} className='step-title'>
-				Documents
-			</h2>
-
+		<WizardStepLayout
+			title='Documents'
+			titleId='documents-title'
+			stepNumber={3}
+			headingRef={headingRef}
+		>
 			{requiredDocumentTypes.length === 0 ? (
 				<p>Select a vehicle type to see required documents.</p>
 			) : (
-				<div className='document-list'>
+				<div className='documents-list'>
 					{requiredDocumentTypes.map((documentType) => {
 						const documentDefinition = config.documents[documentType];
 						const label = documentDefinition?.label ?? documentType;
@@ -89,6 +91,6 @@ export function DocumentsStep({
 					{isSubmitting ? 'Submitting…' : 'Submit application'}
 				</button>
 			</div>
-		</section>
+		</WizardStepLayout>
 	);
 }

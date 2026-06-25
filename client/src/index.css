@@ -1,3 +1,5 @@
+/* Design tokens */
+
 :root {
 	font-family:
 		Inter,
@@ -9,16 +11,20 @@
 		sans-serif;
 
 	color: #1f2933;
-	background: #fff7ef;
+	background: #ff8000;
 
 	--page-bg: #ff8000;
 	--card-bg: #ffffff;
+
 	--text: #1f2933;
 	--text-on-orange: #ffffff;
+	--muted: #5f6773;
+
 	--jet-orange: #ff8000;
 	--jet-orange-hover: #ff9f2f;
 	--jet-orange-soft: #fff1e3;
 	--jet-orange-soft-hover: #ffe4c7;
+
 	--border: #aeb7c2;
 	--card-border: #ffffff;
 	--focus: #ea580c;
@@ -29,6 +35,8 @@
 	--form-error-bg: #fff5f5;
 	--form-error-border: #f5c2c0;
 }
+
+/* Base */
 
 * {
 	box-sizing: border-box;
@@ -52,13 +60,14 @@ select {
 	min-height: 100dvh;
 }
 
+/* Layout */
+
 .app {
 	width: min(100%, 48rem);
 	min-height: 100dvh;
 	margin: 0 auto;
 	padding: 1.5rem;
 	padding-block-end: 3rem;
-	margin-inline: auto;
 }
 
 h1 {
@@ -79,11 +88,18 @@ section {
 	border: 1px solid var(--card-border);
 	border-radius: 1.25rem;
 	background: var(--card-bg);
+	box-shadow: 0 1.5rem 3rem rgb(31 41 51 / 0.18);
 }
 
 section > div {
 	margin-block-end: 1rem;
 }
+
+p {
+	line-height: 1.5;
+}
+
+/* Form controls */
 
 label {
 	display: block;
@@ -115,6 +131,14 @@ button {
 	scroll-margin-block: 1rem;
 }
 
+input[aria-invalid='true'],
+select[aria-invalid='true'] {
+	border-color: var(--error-border);
+	background: var(--error-bg);
+}
+
+/* Buttons */
+
 button {
 	min-height: 2.75rem;
 	padding: 0.65rem 1rem;
@@ -130,6 +154,11 @@ button:hover {
 	background: var(--jet-orange-hover);
 }
 
+button:disabled {
+	cursor: not-allowed;
+	opacity: 0.6;
+}
+
 button + button {
 	margin-inline-start: 0.75rem;
 }
@@ -143,15 +172,6 @@ button:first-child:not(:only-child):hover {
 	background: var(--jet-orange-soft-hover);
 }
 
-button:disabled {
-	cursor: not-allowed;
-	opacity: 0.6;
-}
-
-p {
-	line-height: 1.5;
-}
-
 .button-row {
 	display: flex;
 	gap: 0.75rem;
@@ -163,25 +183,13 @@ p {
 	margin-inline-start: 0;
 }
 
-.documents-list {
-	display: grid;
-}
-
-.document-field {
-	margin-block-end: 1rem;
-}
+/* Feedback messages */
 
 .field-error {
 	margin: 0.35rem 0 0;
 	color: var(--error);
 	font-size: 0.92rem;
 	line-height: 1.4;
-}
-
-input[aria-invalid='true'],
-select[aria-invalid='true'] {
-	border-color: var(--error-border);
-	background: var(--error-bg);
 }
 
 .form-error {
@@ -201,6 +209,8 @@ select[aria-invalid='true'] {
 	line-height: 1.4;
 }
 
+/* Wizard */
+
 .step-title {
 	width: fit-content;
 	border-radius: 0.35rem;
@@ -209,6 +219,21 @@ select[aria-invalid='true'] {
 .step-title:focus {
 	outline: 3px solid var(--focus);
 	outline-offset: 0.2rem;
+}
+
+.step-indicator {
+	margin: 0 0 0.75rem;
+	color: var(--muted);
+	font-size: 0.95rem;
+	font-weight: 700;
+}
+
+.documents-list {
+	display: grid;
+}
+
+.document-field {
+	margin-block-end: 1rem;
 }
 
 code {
@@ -221,17 +246,22 @@ code {
 	font-size: 0.95em;
 }
 
+/* Loading and error states */
+
 .app-state {
 	padding: 1.25rem;
 	border: 1px solid var(--card-border);
 	border-radius: 1.25rem;
 	background: var(--card-bg);
+	box-shadow: 0 1.5rem 3rem rgb(31 41 51 / 0.18);
 }
 
 .app-state[role='alert'] {
 	border-color: var(--form-error-border);
 	background: var(--form-error-bg);
 }
+
+/* Responsive */
 
 @media (max-width: 40rem) {
 	.app {
@@ -249,12 +279,10 @@ code {
 		font-size: 1.35rem;
 	}
 
-	section {
-		padding: 1.25rem;
-		border: 1px solid var(--card-border);
-		border-radius: 1.25rem;
-		background: var(--card-bg);
-		box-shadow: 0 1.5rem 3rem rgb(31 41 51 / 0.18);
+	section,
+	.app-state {
+		padding: 1rem;
+		border-radius: 1rem;
 	}
 
 	section > div {
@@ -272,6 +300,10 @@ code {
 		font-size: 0.88rem;
 	}
 
+	.field-hint {
+		font-size: 0.86rem;
+	}
+
 	.button-row {
 		display: grid;
 		grid-template-columns: 1fr;
@@ -279,9 +311,5 @@ code {
 
 	.button-row button {
 		width: 100%;
-	}
-
-	.field-hint {
-		font-size: 0.86rem;
 	}
 }

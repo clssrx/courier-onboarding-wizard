@@ -1,6 +1,7 @@
 import { CityField } from './CityField';
 import type { Eligibility, FieldErrors, OnboardingConfig } from '../types';
 import type { Ref } from 'react';
+import { WizardStepLayout } from './WizardStepLayout';
 
 type EligibilityStepProps = {
 	headingRef?: Ref<HTMLHeadingElement>;
@@ -22,11 +23,12 @@ export function EligibilityStep({
 	onNext,
 }: EligibilityStepProps) {
 	return (
-		<section aria-labelledby='eligibility-title'>
-			<h2 id='eligibility-title' ref={headingRef} className='step-title'>
-				Eligibility
-			</h2>
-
+		<WizardStepLayout
+			title='Eligibility'
+			titleId='eligibility-title'
+			stepNumber={2}
+			headingRef={headingRef}
+		>
 			<div>
 				<CityField
 					cities={config.cities}
@@ -55,6 +57,7 @@ export function EligibilityStep({
 						</option>
 					))}
 				</select>
+
 				{errors['eligibility.vehicleType'] && (
 					<p id='vehicleType-error' className='field-error'>
 						{errors['eligibility.vehicleType']}
@@ -70,6 +73,6 @@ export function EligibilityStep({
 					Continue
 				</button>
 			</div>
-		</section>
+		</WizardStepLayout>
 	);
 }

@@ -18,6 +18,8 @@ type SubmitApplicationFlowArgs = {
 	formData: WizardFormData;
 	config: OnboardingConfig;
 	dispatch: WizardDispatch;
+	onFieldErrors?: () => void;
+	onSuccess?: () => void;
 };
 
 export async function submitApplicationFlow({
@@ -25,6 +27,8 @@ export async function submitApplicationFlow({
 	formData,
 	config,
 	dispatch,
+	onFieldErrors,
+	onSuccess,
 }: SubmitApplicationFlowArgs): Promise<void> {
 	const documentErrors = validateDocuments(
 		formData.documents,
@@ -33,6 +37,7 @@ export async function submitApplicationFlow({
 	);
 
 	if (hasValidationErrors(documentErrors)) {
+		onFieldErrors?.();
 		dispatch({ type: 'SET_ERRORS', errors: documentErrors });
 		return;
 	}
@@ -46,6 +51,8 @@ export async function submitApplicationFlow({
 			buildSubmitPayload(formData, config),
 		);
 
+		onSuccess?.();
+
 		dispatch({
 			type: 'SUBMIT_SUCCEEDED',
 			applicationId: response.applicationId,
@@ -57,6 +64,8 @@ export async function submitApplicationFlow({
 			hasApiFieldErrors(error.data)
 		) {
 			const fieldErrors = mapApiFieldErrorsToFieldErrors(error.data);
+
+			onFieldErrors?.();
 
 			dispatch({ type: 'SET_ERRORS', errors: fieldErrors });
 			dispatch({

@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useRef } from 'react';
+import { useReducer } from 'react';
 import type { FieldErrors, OnboardingConfig, WizardStep } from './types';
 import { DocumentsStep } from './components/DocumentsStep';
 import { EligibilityStep } from './components/EligibilityStep';
@@ -11,6 +11,7 @@ import {
 	validatePersonalDetails,
 } from './validation';
 import { submitApplicationFlow } from './submission/submitApplicationFlow';
+import { useWizardFocus } from './hooks/useWizardFocus';
 
 type OnboardingWizardProps = {
 	config: OnboardingConfig;
@@ -30,68 +31,15 @@ export function OnboardingWizard({ config }: OnboardingWizardProps) {
 		submittedApplicationId,
 	} = state;
 
-	const wizardRef = useRef<HTMLDivElement>(null);
-	const stepHeadingRef = useRef<HTMLHeadingElement>(null);
-
-	const shouldFocusStepHeadingRef = useRef(false);
-	const shouldFocusFirstErrorRef = useRef(false);
-
-	function focusStepHeading() {
-		const heading = stepHeadingRef.current;
-
-		if (!heading) {
-			return;
-		}
-
-		heading.setAttribute('tabindex', '-1');
-		heading.focus();
-
-		heading.addEventListener(
-			'blur',
-			() => {
-				heading.removeAttribute('tabindex');
-			},
-			{ once: true },
-		);
-	}
-
-	useEffect(() => {
-		if (!shouldFocusStepHeadingRef.current) {
-			return;
-		}
-
-		shouldFocusStepHeadingRef.current = false;
-		focusStepHeading();
-	}, [currentStep]);
-
-	useEffect(() => {
-		if (!shouldFocusFirstErrorRef.current) {
-			return;
-		}
-
-		if (!hasValidationErrors(errors)) {
-			return;
-		}
-
-		shouldFocusFirstErrorRef.current = false;
-		shouldFocusStepHeadingRef.current = false;
-
-		const firstInvalidField = wizardRef.current?.querySelector<HTMLElement>(
-			'input[aria-invalid="true"], select[aria-invalid="true"], textarea[aria-invalid="true"]',
-		);
-
-		firstInvalidField?.focus();
-	}, [errors, currentStep]);
-
-	function requestStepHeadingFocus() {
-		shouldFocusStepHeadingRef.current = true;
-		shouldFocusFirstErrorRef.current = false;
-	}
-
-	function requestFirstInvalidFieldFocus() {
-		shouldFocusFirstErrorRef.current = true;
-		shouldFocusStepHeadingRef.current = false;
-	}
+	const {
+		wizardRef,
+		stepHeadingRef,
+		requestStepHeadingFocus,
+		requestFirstInvalidFieldFocus,
+	} = useWizardFocus({
+		currentStep,
+		errors,
+	});
 
 	function goToStep(step: WizardStep) {
 		requestStepHeadingFocus();
@@ -134,31 +82,18 @@ export function OnboardingWizard({ config }: OnboardingWizardProps) {
 	}
 
 	async function handleSubmit() {
-		requestFirstInvalidFieldFocus();
-
 		await submitApplicationFlow({
 			applicationId: APPLICATION_ID,
 			formData,
 			config,
 			dispatch,
+			onFieldErrors: requestFirstInvalidFieldFocus,
+			onSuccess: requestStepHeadingFocus,
 		});
 	}
 
 	return (
 		<div ref={wizardRef}>
-			{/* Wizard step indicator -> to become a progress bar later */}
-			{currentStep !== 'success' && (
-				<p>
-					Step{' '}
-					{currentStep === 'personal'
-						? '1'
-						: currentStep === 'eligibility'
-							? '2'
-							: '3'}{' '}
-					of 3
-				</p>
-			)}
-
 			{currentStep === 'personal' && (
 				<PersonalDetailsStep
 					headingRef={stepHeadingRef}
