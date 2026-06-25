@@ -1,3 +1,4 @@
+import { CityField } from './CityField';
 import type { Eligibility, FieldErrors, OnboardingConfig } from '../types';
 
 type EligibilityStepProps = {
@@ -22,29 +23,12 @@ export function EligibilityStep({
 			<h2 id='eligibility-title'>Eligibility</h2>
 
 			<div>
-				<label htmlFor='city'>City</label>
-				<select
-					id='city'
-					name='city'
+				<CityField
+					cities={config.cities}
 					value={values.city}
-					aria-invalid={Boolean(errors['eligibility.city'])}
-					aria-describedby={
-						errors['eligibility.city'] ? 'city-error' : undefined
-					}
-					onChange={(event) => onChange('city', event.target.value)}
-				>
-					<option value=''>Select a city</option>
-					{config.cities.map((city) => (
-						<option key={city} value={city}>
-							{city}
-						</option>
-					))}
-				</select>
-				{errors['eligibility.city'] && (
-					<p id='city-error' className='field-error'>
-						{errors['eligibility.city']}
-					</p>
-				)}
+					error={errors['eligibility.city']}
+					onChange={(value) => onChange('city', value)}
+				/>
 			</div>
 
 			<div>
