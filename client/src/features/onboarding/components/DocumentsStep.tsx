@@ -5,8 +5,10 @@ import type {
 	OnboardingConfig,
 } from '../types';
 import { getDocumentNumber } from '../state/wizardReducer';
+import type { Ref } from 'react';
 
 type DocumentsStepProps = {
+	headingRef?: Ref<HTMLHeadingElement>;
 	config: OnboardingConfig;
 	vehicleType: string;
 	documents: DocumentFormFields;
@@ -18,6 +20,7 @@ type DocumentsStepProps = {
 	onSubmit: () => void;
 };
 export function DocumentsStep({
+	headingRef,
 	config,
 	vehicleType,
 	documents,
@@ -32,7 +35,9 @@ export function DocumentsStep({
 
 	return (
 		<section aria-labelledby='documents-title'>
-			<h2 id='documents-title'>Documents</h2>
+			<h2 id='documents-title' ref={headingRef} className='step-title'>
+				Documents
+			</h2>
 
 			{requiredDocumentTypes.length === 0 ? (
 				<p>Select a vehicle type to see required documents.</p>

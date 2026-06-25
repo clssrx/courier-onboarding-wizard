@@ -1,7 +1,9 @@
 import { CityField } from './CityField';
 import type { Eligibility, FieldErrors, OnboardingConfig } from '../types';
+import type { Ref } from 'react';
 
 type EligibilityStepProps = {
+	headingRef?: Ref<HTMLHeadingElement>;
 	config: OnboardingConfig;
 	values: Eligibility;
 	errors: FieldErrors;
@@ -11,6 +13,7 @@ type EligibilityStepProps = {
 };
 
 export function EligibilityStep({
+	headingRef,
 	config,
 	values,
 	errors,
@@ -20,7 +23,9 @@ export function EligibilityStep({
 }: EligibilityStepProps) {
 	return (
 		<section aria-labelledby='eligibility-title'>
-			<h2 id='eligibility-title'>Eligibility</h2>
+			<h2 id='eligibility-title' ref={headingRef} className='step-title'>
+				Eligibility
+			</h2>
 
 			<div>
 				<CityField

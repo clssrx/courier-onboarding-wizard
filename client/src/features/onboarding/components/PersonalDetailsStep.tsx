@@ -1,6 +1,8 @@
 import type { FieldErrors, PersonalDetails } from '../types';
+import type { Ref } from 'react';
 
 type PersonalDetailsStepProps = {
+	headingRef?: Ref<HTMLHeadingElement>;
 	values: PersonalDetails;
 	errors: FieldErrors;
 	onChange: (field: keyof PersonalDetails, value: string) => void;
@@ -8,6 +10,7 @@ type PersonalDetailsStepProps = {
 };
 
 export function PersonalDetailsStep({
+	headingRef,
 	values,
 	errors,
 	onChange,
@@ -15,7 +18,9 @@ export function PersonalDetailsStep({
 }: PersonalDetailsStepProps) {
 	return (
 		<section aria-labelledby='personal-details-title'>
-			<h2 id='personal-details-title'>Personal details</h2>
+			<h2 id='personal-details-title' ref={headingRef} className='step-title'>
+				Personal details
+			</h2>
 
 			<div>
 				<label htmlFor='firstName'>First name</label>

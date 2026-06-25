@@ -7,8 +7,27 @@
 		BlinkMacSystemFont,
 		'Segoe UI',
 		sans-serif;
+
 	color: #1f2933;
-	background: #f7f7f8;
+	background: #fff7ef;
+
+	--page-bg: #ff8000;
+	--card-bg: #ffffff;
+	--text: #1f2933;
+	--text-on-orange: #ffffff;
+	--jet-orange: #ff8000;
+	--jet-orange-hover: #ff9f2f;
+	--jet-orange-soft: #fff1e3;
+	--jet-orange-soft-hover: #ffe4c7;
+	--border: #aeb7c2;
+	--card-border: #ffffff;
+	--focus: #ea580c;
+
+	--error: #b42318;
+	--error-border: #d92d20;
+	--error-bg: #fffafa;
+	--form-error-bg: #fff5f5;
+	--form-error-border: #f5c2c0;
 }
 
 * {
@@ -19,9 +38,8 @@ body {
 	margin: 0;
 	min-width: 320px;
 	min-height: 100dvh;
-	background:
-		radial-gradient(circle at top left, #fff4e8 0, transparent 28rem), #f7f7f8;
-	color: #1f2933;
+	background: var(--page-bg);
+	color: var(--text);
 }
 
 button,
@@ -38,7 +56,9 @@ select {
 	width: min(100%, 48rem);
 	min-height: 100dvh;
 	margin: 0 auto;
-	padding: 1.25rem;
+	padding: 1.5rem;
+	padding-block-end: 3rem;
+	margin-inline: auto;
 }
 
 h1 {
@@ -46,7 +66,7 @@ h1 {
 	font-size: clamp(2rem, 8vw, 3.25rem);
 	line-height: 1;
 	letter-spacing: -0.05em;
-	color: #1f2933;
+	color: var(--text-on-orange);
 }
 
 h2 {
@@ -56,10 +76,9 @@ h2 {
 
 section {
 	padding: 1.25rem;
-	border: 1px solid #e2e4e8;
+	border: 1px solid var(--card-border);
 	border-radius: 1.25rem;
-	background: white;
-	box-shadow: 0 1.5rem 3rem rgb(31 41 51 / 0.08);
+	background: var(--card-bg);
 }
 
 section > div {
@@ -77,32 +96,38 @@ select {
 	width: 100%;
 	min-height: 2.75rem;
 	padding: 0.65rem 0.75rem;
-	border: 1px solid #c9cdd3;
+	border: 1px solid var(--border);
 	border-radius: 0.75rem;
 	background: white;
-	color: #1f2933;
+	color: var(--text);
 }
 
 input:focus,
 select:focus,
 button:focus-visible {
-	outline: 3px solid #ffb000;
+	outline: 3px solid var(--focus);
 	outline-offset: 2px;
+}
+
+input,
+select,
+button {
+	scroll-margin-block: 1rem;
 }
 
 button {
 	min-height: 2.75rem;
 	padding: 0.65rem 1rem;
-	border: 0;
+	border: 1px solid transparent;
 	border-radius: 999px;
-	background: #ff8000;
-	color: #1f2933;
+	background: var(--jet-orange);
+	color: var(--text);
 	font-weight: 750;
 	cursor: pointer;
 }
 
 button:hover {
-	background: #ff9f2f;
+	background: var(--jet-orange-hover);
 }
 
 button + button {
@@ -110,11 +135,12 @@ button + button {
 }
 
 button:first-child:not(:only-child) {
-	background: #edf0f3;
+	border-color: var(--focus);
+	background: var(--jet-orange-soft);
 }
 
 button:first-child:not(:only-child):hover {
-	background: #dde2e7;
+	background: var(--jet-orange-soft-hover);
 }
 
 button:disabled {
@@ -147,37 +173,70 @@ p {
 
 .field-error {
 	margin: 0.35rem 0 0;
-	color: #b42318;
+	color: var(--error);
 	font-size: 0.92rem;
 	line-height: 1.4;
 }
 
 input[aria-invalid='true'],
 select[aria-invalid='true'] {
-	border-color: #d92d20;
-	background: #fffafa;
+	border-color: var(--error-border);
+	background: var(--error-bg);
 }
 
 .form-error {
 	margin: 1rem 0 0;
 	padding: 0.85rem 1rem;
-	border: 1px solid #f5c2c0;
+	border: 1px solid var(--form-error-border);
 	border-radius: 0.75rem;
-	background: #fff5f5;
+	background: var(--form-error-bg);
 	color: #9f1f17;
 	font-weight: 650;
 }
 
 .field-hint {
 	margin: 0.35rem 0 0;
-	color: #68717d;
+	color: var(--muted);
 	font-size: 0.9rem;
 	line-height: 1.4;
+}
+
+.step-title {
+	width: fit-content;
+	border-radius: 0.35rem;
+}
+
+.step-title:focus {
+	outline: 3px solid var(--focus);
+	outline-offset: 0.2rem;
+}
+
+code {
+	padding: 0.1rem 0.3rem;
+	border-radius: 0.35rem;
+	background: var(--jet-orange-soft);
+	font-family:
+		ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+		monospace;
+	font-size: 0.95em;
+}
+
+.app-state {
+	padding: 1.25rem;
+	border: 1px solid var(--card-border);
+	border-radius: 1.25rem;
+	background: var(--card-bg);
+}
+
+.app-state[role='alert'] {
+	border-color: var(--form-error-border);
+	background: var(--form-error-bg);
 }
 
 @media (max-width: 40rem) {
 	.app {
 		padding: 1rem;
+		padding-block-end: 2.5rem;
 	}
 
 	h1 {
@@ -191,8 +250,11 @@ select[aria-invalid='true'] {
 	}
 
 	section {
-		padding: 1rem;
-		border-radius: 1rem;
+		padding: 1.25rem;
+		border: 1px solid var(--card-border);
+		border-radius: 1.25rem;
+		background: var(--card-bg);
+		box-shadow: 0 1.5rem 3rem rgb(31 41 51 / 0.18);
 	}
 
 	section > div {
@@ -211,10 +273,11 @@ select[aria-invalid='true'] {
 	}
 
 	.button-row {
-		margin-block-start: 1rem;
+		display: grid;
+		grid-template-columns: 1fr;
 	}
 
-	button {
+	.button-row button {
 		width: 100%;
 	}
 

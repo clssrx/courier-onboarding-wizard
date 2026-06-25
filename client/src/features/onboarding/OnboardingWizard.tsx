@@ -1,4 +1,4 @@
-import { useReducer } from 'react';
+import { useEffect, useReducer, useRef } from 'react';
 import type { FieldErrors, OnboardingConfig, WizardStep } from './types';
 import { DocumentsStep } from './components/DocumentsStep';
 import { EligibilityStep } from './components/EligibilityStep';
@@ -30,17 +30,86 @@ export function OnboardingWizard({ config }: OnboardingWizardProps) {
 		submittedApplicationId,
 	} = state;
 
+	const wizardRef = useRef<HTMLDivElement>(null);
+	const stepHeadingRef = useRef<HTMLHeadingElement>(null);
+
+	const shouldFocusStepHeadingRef = useRef(false);
+	const shouldFocusFirstErrorRef = useRef(false);
+
+	function focusStepHeading() {
+		const heading = stepHeadingRef.current;
+
+		if (!heading) {
+			return;
+		}
+
+		heading.setAttribute('tabindex', '-1');
+		heading.focus();
+
+		heading.addEventListener(
+			'blur',
+			() => {
+				heading.removeAttribute('tabindex');
+			},
+			{ once: true },
+		);
+	}
+
+	useEffect(() => {
+		if (!shouldFocusStepHeadingRef.current) {
+			return;
+		}
+
+		shouldFocusStepHeadingRef.current = false;
+		focusStepHeading();
+	}, [currentStep]);
+
+	useEffect(() => {
+		if (!shouldFocusFirstErrorRef.current) {
+			return;
+		}
+
+		if (!hasValidationErrors(errors)) {
+			return;
+		}
+
+		shouldFocusFirstErrorRef.current = false;
+		shouldFocusStepHeadingRef.current = false;
+
+		const firstInvalidField = wizardRef.current?.querySelector<HTMLElement>(
+			'input[aria-invalid="true"], select[aria-invalid="true"], textarea[aria-invalid="true"]',
+		);
+
+		firstInvalidField?.focus();
+	}, [errors, currentStep]);
+
+	function requestStepHeadingFocus() {
+		shouldFocusStepHeadingRef.current = true;
+		shouldFocusFirstErrorRef.current = false;
+	}
+
+	function requestFirstInvalidFieldFocus() {
+		shouldFocusFirstErrorRef.current = true;
+		shouldFocusStepHeadingRef.current = false;
+	}
+
+	function goToStep(step: WizardStep) {
+		requestStepHeadingFocus();
+		dispatch({ type: 'GO_TO_STEP', step });
+	}
+
 	function goToStepAfterValidation(
 		errorsForStep: FieldErrors,
 		nextStep: WizardStep,
 	) {
 		if (hasValidationErrors(errorsForStep)) {
+			requestFirstInvalidFieldFocus();
 			dispatch({ type: 'SET_ERRORS', errors: errorsForStep });
 			return;
 		}
 
 		dispatch({ type: 'CLEAR_ERRORS' });
-		dispatch({ type: 'GO_TO_STEP', step: nextStep });
+		goToStep(nextStep);
 	}
 
 	function handleNext() {
@@ -65,6 +134,8 @@ export function OnboardingWizard({ config }: OnboardingWizardProps) {
 	}
 
 	async function handleSubmit() {
+		requestFirstInvalidFieldFocus();
+
 		await submitApplicationFlow({
 			applicationId: APPLICATION_ID,
 			formData,
@@ -74,7 +145,7 @@ export function OnboardingWizard({ config }: OnboardingWizardProps) {
 	}
 
 	return (
-		<div>
+		<div ref={wizardRef}>
 			{/* Wizard step indicator -> to become a progress bar later */}
 			{currentStep !== 'success' && (
 				<p>
@@ -90,6 +161,7 @@ export function OnboardingWizard({ config }: OnboardingWizardProps) {
 
 			{currentStep === 'personal' && (
 				<PersonalDetailsStep
+					headingRef={stepHeadingRef}
 					values={formData.personal}
 					errors={errors}
 					onChange={(field, value) =>
@@ -101,19 +173,21 @@ export function OnboardingWizard({ config }: OnboardingWizardProps) {
 
 			{currentStep === 'eligibility' && (
 				<EligibilityStep
+					headingRef={stepHeadingRef}
 					config={config}
 					values={formData.eligibility}
 					errors={errors}
 					onChange={(field, value) =>
 						dispatch({ type: 'UPDATE_ELIGIBILITY_FIELD', field, value })
 					}
-					onBack={() => dispatch({ type: 'GO_TO_STEP', step: 'personal' })}
+					onBack={() => goToStep('personal')}
 					onNext={handleNext}
 				/>
 			)}
 
 			{currentStep === 'documents' && (
 				<DocumentsStep
+					headingRef={stepHeadingRef}
 					config={config}
 					vehicleType={formData.eligibility.vehicleType}
 					documents={formData.documents}
@@ -127,13 +201,16 @@ export function OnboardingWizard({ config }: OnboardingWizardProps) {
 							value,
 						})
 					}
-					onBack={() => dispatch({ type: 'GO_TO_STEP', step: 'eligibility' })}
+					onBack={() => goToStep('eligibility')}
 					onSubmit={handleSubmit}
 				/>
 			)}
 
 			{currentStep === 'success' && (
-				<SuccessStep applicationId={submittedApplicationId} />
+				<SuccessStep
+					applicationId={submittedApplicationId}
+					headingRef={stepHeadingRef}
+				/>
 			)}
 		</div>
 	);
