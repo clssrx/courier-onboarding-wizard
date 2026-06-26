@@ -21,6 +21,8 @@ export function buildSubmitPayload(
 			city: formData.eligibility.city,
 			vehicleType: formData.eligibility.vehicleType,
 		},
+		// Only submit documents required by the currently selected vehicle.
+		// This prevents stale values from a previously selected vehicle being sent.
 		documents: requiredDocumentTypes.map((documentType) => ({
 			type: documentType,
 			number: formData.documents[documentType]?.number.trim() ?? '',

@@ -95,7 +95,6 @@ export function PersonalDetailsStep({
 					name='dateOfBirth'
 					type='date'
 					value={values.dateOfBirth}
-					autoComplete='bday'
 					aria-invalid={Boolean(errors['personal.dateOfBirth'])}
 					aria-describedby={
 						errors['personal.dateOfBirth'] ? 'dateOfBirth-error' : undefined

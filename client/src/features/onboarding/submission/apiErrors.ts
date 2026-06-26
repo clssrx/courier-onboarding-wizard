@@ -36,6 +36,9 @@ export function mapApiFieldErrorsToFieldErrors(
 	}, {});
 }
 
+// API field names use dot paths, such as "personal.email" or
+// "documents.drivers_license.number". The first segment tells the wizard
+// which step should be shown before focusing the invalid field.
 export function getStepForField(field: string): WizardStep {
 	if (field.startsWith('personal.')) {
 		return 'personal';

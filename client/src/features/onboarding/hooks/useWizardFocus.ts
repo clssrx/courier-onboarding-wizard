@@ -14,6 +14,9 @@ export function useWizardFocus({ currentStep, errors }: UseWizardFocusArgs) {
 	const wizardRef = useRef<HTMLDivElement>(null);
 	const stepHeadingRef = useRef<HTMLHeadingElement>(null);
 
+	// Focus targets may not exist until after React renders the next step
+	// or the latest validation errors. These refs store the focus request
+	// without causing another render.
 	const shouldFocusStepHeadingRef = useRef(false);
 	const shouldFocusFirstErrorRef = useRef(false);
 
@@ -24,6 +27,9 @@ export function useWizardFocus({ currentStep, errors }: UseWizardFocusArgs) {
 			return;
 		}
 
+		// Headings are not focusable by default. Adding tabindex="-1"
+		// temporarily lets us move focus there programmatically without
+		// putting the heading into the normal Tab order.
 		heading.setAttribute('tabindex', '-1');
 		heading.focus();
 
@@ -56,6 +62,9 @@ export function useWizardFocus({ currentStep, errors }: UseWizardFocusArgs) {
 
 		shouldFocusStepHeadingRef.current = false;
 
+		// Validation and server errors mark controls with aria-invalid="true".
+		// After the current step has rendered, the first invalid control becomes
+		// the most useful focus target.
 		const firstInvalidField = wizardRef.current?.querySelector<HTMLElement>(
 			INVALID_FIELD_SELECTOR,
 		);

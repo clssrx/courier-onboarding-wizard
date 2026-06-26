@@ -58,6 +58,8 @@ export async function submitApplicationFlow({
 			applicationId: response.applicationId,
 		});
 	} catch (error) {
+		// 422 and 409 responses use field-level dot paths. They need to be
+		// shown on the matching field and step, not as a generic submit error.
 		if (
 			isApiError(error) &&
 			(error.status === 422 || error.status === 409) &&
@@ -75,6 +77,8 @@ export async function submitApplicationFlow({
 			return;
 		}
 
+		// Transient or unexpected submit failures keep the form data in place
+		// and show a retryable form-level error.
 		if (isApiError(error)) {
 			dispatch({
 				type: 'SUBMIT_FAILED',

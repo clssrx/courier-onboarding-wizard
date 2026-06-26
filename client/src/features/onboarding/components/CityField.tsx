@@ -10,6 +10,8 @@ type CityFieldProps = {
 };
 
 export function CityField({ cities, value, error, onChange }: CityFieldProps) {
+	// The API city list is intentionally large. Deferring the search value and
+	// rendering only a small number of suggestions keeps typing responsive.
 	const deferredValue = useDeferredValue(value);
 
 	const visibleCities = useMemo(() => {
