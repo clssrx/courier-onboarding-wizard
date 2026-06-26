@@ -63,7 +63,7 @@ select {
 /* Layout */
 
 .app {
-	width: min(100%, 48rem);
+	width: min(100%, 44rem);
 	min-height: 100dvh;
 	margin: 0 auto;
 	padding: 1.5rem;
@@ -114,8 +114,23 @@ select {
 	padding: 0.65rem 0.75rem;
 	border: 1px solid var(--border);
 	border-radius: 0.75rem;
-	background: white;
+	background-color: white;
 	color: var(--text);
+}
+select {
+	appearance: none;
+	-webkit-appearance: none;
+	padding-right: 2.5rem;
+	background-image:
+		linear-gradient(45deg, transparent 50%, var(--text) 50%),
+		linear-gradient(135deg, var(--text) 50%, transparent 50%);
+	background-position:
+		calc(100% - 1.2rem) 50%,
+		calc(100% - 0.85rem) 50%;
+	background-size:
+		0.35rem 0.35rem,
+		0.35rem 0.35rem;
+	background-repeat: no-repeat;
 }
 
 input:focus,
@@ -261,11 +276,49 @@ code {
 	background: var(--form-error-bg);
 }
 
+/* Progress Bar */
+
+.step-progress {
+	margin-block-end: 1rem;
+}
+
+.step-progress-label {
+	margin: 0 0 0.5rem;
+	color: var(--muted);
+	font-size: 0.95rem;
+	font-weight: 700;
+}
+
+.step-progress-bar {
+	width: 100%;
+	height: 0.55rem;
+	overflow: hidden;
+	border: 0;
+	border-radius: 999px;
+	background: var(--jet-orange-soft-hover);
+	appearance: none;
+}
+
+.step-progress-bar::-webkit-progress-bar {
+	border-radius: 999px;
+	background: var(--jet-orange-soft-hover);
+}
+
+.step-progress-bar::-webkit-progress-value {
+	border-radius: 999px;
+	background: var(--jet-orange);
+}
+
+.step-progress-bar::-moz-progress-bar {
+	border-radius: 999px;
+	background: var(--jet-orange);
+}
+
 /* Responsive */
 
 @media (max-width: 40rem) {
 	.app {
-		padding: 1rem;
+		padding: 1.75rem 1rem 2.5rem;
 		padding-block-end: 2.5rem;
 	}
 

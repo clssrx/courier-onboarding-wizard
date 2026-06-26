@@ -1,4 +1,5 @@
 import type { ReactNode, Ref } from 'react';
+import { StepProgress } from './StepProgress';
 
 type WizardStepLayoutProps = {
 	title: string;
@@ -17,18 +18,25 @@ export function WizardStepLayout({
 	headingRef,
 	children,
 }: WizardStepLayoutProps) {
+	const headingLabel =
+		stepNumber !== undefined
+			? `Step ${stepNumber} of ${totalSteps}: ${title}`
+			: title;
+
 	return (
-		<section aria-labelledby={titleId}>
+		<section>
 			{stepNumber !== undefined && (
-				<p className='step-indicator'>
-					Step {stepNumber} of {totalSteps}
-				</p>
+				<StepProgress currentStep={stepNumber} totalSteps={totalSteps} />
 			)}
 
-			<h2 id={titleId} ref={headingRef} className='step-title'>
+			<h2
+				id={titleId}
+				ref={headingRef}
+				className='step-title'
+				aria-label={headingLabel}
+			>
 				{title}
 			</h2>
-
 			{children}
 		</section>
 	);

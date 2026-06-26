@@ -95,6 +95,8 @@ Focus is managed explicitly:
 - validation and server field errors move focus to the first invalid field
 - successful submission moves focus to the success heading, which is associated with the confirmation message
 
+The focused step heading includes the step context for screen readers, for example “Step 2 of 3: Eligibility”.
+
 I kept the native date input for date of birth because it provides a clean browser UI and keeps the value in the API-friendly `YYYY-MM-DD` format. A production version would need broader testing across browser and screen reader combinations, since native date picker accessibility can vary.
 
 ## Long city list
@@ -125,4 +127,4 @@ The test suite focuses on the main product logic:
 
 ## Tradeoffs
 
-I did not implement the optional resume flow, custom accessible combobox, virtualised city list, live-region announcement system, or visible progress indicator. I focused on the required wizard behaviour, field-level error handling, accessibility basics, responsive layout, city-list performance, and meaningful tests.
+I did not implement the optional resume flow, custom accessible combobox, virtualised city list, or full live-region announcement system. I did add a lightweight visible step indicator/progress treatment to help users understand where they are in the flow.

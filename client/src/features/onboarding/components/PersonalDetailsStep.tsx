@@ -31,6 +31,7 @@ export function PersonalDetailsStep({
 					name='firstName'
 					value={values.firstName}
 					maxLength={80}
+					autoComplete='given-name'
 					aria-invalid={Boolean(errors['personal.firstName'])}
 					aria-describedby={
 						errors['personal.firstName'] ? 'firstName-error' : undefined
@@ -51,6 +52,7 @@ export function PersonalDetailsStep({
 					name='lastName'
 					value={values.lastName}
 					maxLength={80}
+					autoComplete='family-name'
 					aria-invalid={Boolean(errors['personal.lastName'])}
 					aria-describedby={
 						errors['personal.lastName'] ? 'lastName-error' : undefined
@@ -72,6 +74,7 @@ export function PersonalDetailsStep({
 					type='email'
 					value={values.email}
 					maxLength={254}
+					autoComplete='email'
 					aria-invalid={Boolean(errors['personal.email'])}
 					aria-describedby={
 						errors['personal.email'] ? 'email-error' : undefined
@@ -92,6 +95,7 @@ export function PersonalDetailsStep({
 					name='dateOfBirth'
 					type='date'
 					value={values.dateOfBirth}
+					autoComplete='bday'
 					aria-invalid={Boolean(errors['personal.dateOfBirth'])}
 					aria-describedby={
 						errors['personal.dateOfBirth'] ? 'dateOfBirth-error' : undefined
